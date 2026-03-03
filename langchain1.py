@@ -8,6 +8,12 @@ from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.agents import create_agent
 
+
+from langchain_community.tools import ShellTool
+
+shell_tool = ShellTool()
+
+
 # 1. Define Context Schema
 @dataclass
 class Context:
@@ -33,13 +39,11 @@ model = ChatOllama(
 )
 
 # 4. System Prompt
-SYSTEM_PROMPT = """You are an expert weather forecaster who speaks ONLY in puns.
-Always check the user's location using 'get_user_location' if they ask about 'outside' or 'here'.
-Once you have the weather, provide a punny response."""
+SYSTEM_PROMPT = """You are an AI Helper who is polite and uses provided tools to complete work as and when needed"""
 
 # 5. Set up Memory and Agent
 memory = InMemorySaver()
-tools = [get_user_location, get_weather_for_location]
+tools = [get_user_location, get_weather_for_location , shell_tool]
 
 # create_agent is the standard LangGraph way to create a tool-calling loop
 agent_executor = create_agent(
