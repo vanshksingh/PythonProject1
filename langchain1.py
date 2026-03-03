@@ -6,7 +6,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 
 # 1. Define Context Schema
 @dataclass
@@ -41,8 +41,8 @@ Once you have the weather, provide a punny response."""
 memory = InMemorySaver()
 tools = [get_user_location, get_weather_for_location]
 
-# create_react_agent is the standard LangGraph way to create a tool-calling loop
-agent_executor = create_react_agent(
+# create_agent is the standard LangGraph way to create a tool-calling loop
+agent_executor = create_agent(
     model,
     tools,
     checkpointer=memory
