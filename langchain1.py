@@ -1,99 +1,82 @@
+import uuid
 from dataclasses import dataclass
-from typing import Optional
+from typing import Literal
 
-from langchain.agents import create_agent
-from langchain.chat_models import init_chat_model
-from langchain.tools import tool
-from langchain.agents.structured_output import ToolStrategy
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.prebuilt import create_react_agent
 
-
-# =========================
-# System Prompt
-# =========================
-SYSTEM_PROMPT = """
-You are a simple math assistant.
-
-You have access to:
-- multiply_numbers: multiply two numbers
-
-If the user asks for multiplication, use the tool.
-"""
-
-
-# =========================
-# Response Schema
-# =========================
+# 1. Define Context Schema
 @dataclass
-class ResponseFormat:
-    answer: str
-    tool_used: Optional[str] = None
+class Context:
+    user_id: str
 
-
-# =========================
-# Tools
-# =========================
+# 2. Define Tools with Runtime Context
 @tool
-def multiply_numbers(a: int, b: int) -> int:
-    """Multiply two integers."""
-    return a * b
+def get_user_location(config: dict) -> str:
+    """Retrieve user information based on user ID from the configuration."""
+    # In LangGraph, we access context via the 'configurable' field in config
+    user_id = config.get("configurable", {}).get("user_id")
+    return "Florida" if user_id == "1" else "San Francisco"
 
+@tool
+def get_weather_for_location(city: str) -> str:
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
 
-# =========================
-# Model Factory
-# =========================
-def create_model():
-    """
-    Requires Ollama running locally:
-    ollama pull llama3
-    ollama serve
-    """
-    return init_chat_model(
-        "ollama:mistral:7b-instruct",  # change to any tool-calling capable model
-        temperature=0
-    )
+# 3. Configure Model (gpt-oss via Ollama)
+model = ChatOllama(
+    model="gpt-oss:20b",
+    temperature=0,
+)
 
+# 4. System Prompt
+SYSTEM_PROMPT = """You are an expert weather forecaster who speaks ONLY in puns.
+Always check the user's location using 'get_user_location' if they ask about 'outside' or 'here'.
+Once you have the weather, provide a punny response."""
 
-# =========================
-# Agent Factory
-# =========================
-def create_math_agent():
-    model = create_model()
-    checkpointer = InMemorySaver()
+# 5. Set up Memory and Agent
+memory = InMemorySaver()
+tools = [get_user_location, get_weather_for_location]
 
-    agent = create_agent(
-        model=model,
-        system_prompt=SYSTEM_PROMPT,
-        tools=[multiply_numbers],
-        response_format=ToolStrategy(ResponseFormat),
-        checkpointer=checkpointer
-    )
+# create_react_agent is the standard LangGraph way to create a tool-calling loop
+agent_executor = create_react_agent(
+    model,
+    tools,
+    checkpointer=memory
+)
 
-    return agent
+def start_chat():
+    # Generate a unique thread ID for this specific session
+    thread_id = str(uuid.uuid4())
+    config = {
+        "configurable": {
+            "thread_id": thread_id,
+            "user_id": "1" # This mimics your context logic
+        }
+    }
 
+    print("--- 🌦️ Weather Pun-dit 3000 Online ---")
+    print("(Type 'exit' to quit)\n")
 
-# =========================
-# Runner
-# =========================
-def run_example():
-    agent = create_math_agent()
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["exit", "quit", "q"]:
+            print("Pun-dit: See ya on the 'sunny side'!")
+            break
 
-    config = {"configurable": {"thread_id": "1"}}
+        # Invoke the agent
+        # The agent maintains state via the thread_id in config
+        result = agent_executor.invoke(
+            {"messages": [HumanMessage(content=user_input)]},
+            config=config
+        )
 
-    response = agent.invoke(
-        {
-            "messages": [
-                {"role": "user", "content": "What is 6 times 7?"}
-            ]
-        },
-        config=config
-    )
+        # The last message in the list is the AI's final response
+        final_response = result["messages"][-1].content
+        print(f"\nPun-dit: {final_response}\n")
 
-    print(response["structured_response"])
-
-
-# =========================
-# Entry Point
-# =========================
 if __name__ == "__main__":
-    run_example()
+    start_chat()
