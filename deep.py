@@ -6,7 +6,7 @@ from pypdf import PdfReader
 # LangChain & Ollama Imports
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain.tools import tool
+from langchain1.tools import tool
 # New / Correct
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from deepagents import create_deep_agent
