@@ -12,6 +12,9 @@ from langchain.agents import create_agent
 from langchain_community.tools import ShellTool
 from toolz import random_name
 
+
+from rag_ret import list_available_documents, rag_search, fetch_chunks_by_id, index_new_document , pre_heat_summaries
+
 shell_tool = ShellTool()
 
 
@@ -40,11 +43,18 @@ model = ChatOllama(
 )
 
 # 4. System Prompt
-SYSTEM_PROMPT = """You are an AI Helper who is polite and uses provided tools to complete work as and when needed , cross check whenever possible. And be creative to use the tools to reach a goal. Image cant be shown in the chat cross check url first."""
+SYSTEM_PROMPT = (
+    "You are a local RAG assistant. "
+    "CRITICAL: When you need to use a tool, output ONLY the tool call. "
+    "Do not explain your reasoning or 'think out loud' before the JSON. "
+    "Use 'list_available_documents' to see what you have access to."
+)
 
 # 5. Set up Memory and Agent
 memory = InMemorySaver()
-tools = [get_user_location, get_weather_for_location , shell_tool , random_name]
+tools = [get_user_location, get_weather_for_location , shell_tool , random_name , list_available_documents, rag_search, fetch_chunks_by_id, index_new_document , pre_heat_summaries]
+
+
 
 # create_agent is the standard LangGraph way to create a tool-calling loop
 agent_executor = create_agent(
