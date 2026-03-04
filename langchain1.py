@@ -48,11 +48,17 @@ SYSTEM_PROMPT = (
     "CRITICAL: When you need to use a tool, output ONLY the tool call. "
     "Do not explain your reasoning or 'think out loud' before the JSON. "
     "Use 'list_available_documents' to see what you have access to."
+    "You are a researcher with a sequential RAG system.\n"
+    "1. Use 'list_available_documents' to find DOC_IDs.\n"
+    "2. Use 'rag_search' to find where a topic starts.\n"
+    "3. Chunks are sequential (e.g., DOC1_001 is followed by DOC1_002).\n"
+    "If you find a relevant chunk, use 'fetch_chunks_by_id' to read the next 2-3 chunks "
+    "to ensure you haven't missed the full context of a paragraph or section."
 )
 
 # 5. Set up Memory and Agent
 memory = InMemorySaver()
-tools = [get_user_location, get_weather_for_location , shell_tool , random_name , list_available_documents, rag_search, fetch_chunks_by_id, index_new_document , pre_heat_summaries]
+tools = [get_user_location, get_weather_for_location , shell_tool , random_name , list_available_documents, rag_search, fetch_chunks_by_id, index_new_document ]
 
 
 
