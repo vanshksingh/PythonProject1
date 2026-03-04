@@ -10,6 +10,7 @@ from langchain.agents import create_agent
 
 
 from langchain_community.tools import ShellTool
+from toolz import random_name
 
 shell_tool = ShellTool()
 
@@ -39,11 +40,11 @@ model = ChatOllama(
 )
 
 # 4. System Prompt
-SYSTEM_PROMPT = """You are an AI Helper who is polite and uses provided tools to complete work as and when needed"""
+SYSTEM_PROMPT = """You are an AI Helper who is polite and uses provided tools to complete work as and when needed , cross check whenever possible. And be creative to use the tools to reach a goal. Image cant be shown in the chat cross check url first."""
 
 # 5. Set up Memory and Agent
 memory = InMemorySaver()
-tools = [get_user_location, get_weather_for_location , shell_tool]
+tools = [get_user_location, get_weather_for_location , shell_tool , random_name]
 
 # create_agent is the standard LangGraph way to create a tool-calling loop
 agent_executor = create_agent(
