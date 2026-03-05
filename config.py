@@ -8,3 +8,6 @@ DB_PATH = "./local_rag_db"
 CACHE_PATH = "./doc_cache"
 
 os.makedirs(CACHE_PATH, exist_ok=True)
+
+
+
