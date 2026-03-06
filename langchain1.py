@@ -1,9 +1,8 @@
 import uuid
 from dataclasses import dataclass
-from typing import Literal
 
 from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.agents import create_agent
