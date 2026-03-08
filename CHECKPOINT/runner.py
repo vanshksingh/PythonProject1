@@ -1,20 +1,13 @@
 import uuid
 from dataclasses import dataclass
-
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
-from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.agents import create_agent
+# External
+from rag_ret import list_available_documents, rag_search, fetch_chunks_by_id, index_new_document
+from config  import MAIN_MODEL, TEMPERATURE
 
-
-from langchain_community.tools import ShellTool
-from toolz import random_name
-
-
-from rag_ret import list_available_documents, rag_search, fetch_chunks_by_id, index_new_document , pre_heat_summaries
-
-shell_tool = ShellTool()
 
 
 # 1. Define Context Schema
@@ -23,22 +16,14 @@ class Context:
     user_id: str
 
 # 2. Define Tools with Runtime Context
-@tool
-def get_user_location(config: dict) -> str:
-    """Retrieve user information based on user ID from the configuration."""
-    # In LangGraph, we access context via the 'configurable' field in config
-    user_id = config.get("configurable", {}).get("user_id")
-    return "Florida" if user_id == "1" else "San Francisco"
-
-@tool
-def get_weather_for_location(city: str) -> str:
-    """Get weather for a given city."""
-    return f"It's always sunny in {city}!"
+#defined in rag_ret.py
 
 # 3. Configure Model (gpt-oss via Ollama)
+#Chane in Config.py
+
 model = ChatOllama(
-    model="gpt-oss:20b",
-    temperature=0,
+    model=MAIN_MODEL,
+    temperature=TEMPERATURE,
 )
 
 # 4. System Prompt
@@ -57,7 +42,7 @@ SYSTEM_PROMPT = (
 
 # 5. Set up Memory and Agent
 memory = InMemorySaver()
-tools = [get_user_location, get_weather_for_location , shell_tool , random_name , list_available_documents, rag_search, fetch_chunks_by_id, index_new_document ]
+tools = [ list_available_documents, rag_search, fetch_chunks_by_id, index_new_document ]
 
 
 
