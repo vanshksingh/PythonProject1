@@ -9,7 +9,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.tools import tool
 
-from config import EMBEDDER_MODEL, SUMMARY_MODEL, DB_PATH, CACHE_PATH
+from config import EMBEDDER_MODEL, SUMMARY_MODEL, DB_PATH, DB_NAME , CACHE_PATH , CACHE_NAME
 
 # Initialize directories
 os.makedirs(CACHE_PATH, exist_ok=True)
@@ -19,8 +19,8 @@ embeddings = OllamaEmbeddings(model=EMBEDDER_MODEL)
 summarizer_llm = OllamaLLM(model=SUMMARY_MODEL)
 vector_store = Chroma(persist_directory=DB_PATH, embedding_function=embeddings)
 
-SUMMARY_CACHE_PATH = os.path.join(CACHE_PATH, "chunk_summaries.json")
-CATALOG_PATH = os.path.join(CACHE_PATH, "catalog.json")
+SUMMARY_CACHE_PATH = os.path.join(CACHE_PATH, DB_NAME)
+CATALOG_PATH = os.path.join(CACHE_PATH, CACHE_NAME)
 
 
 def load_json_cache(path: str) -> dict:

@@ -6,7 +6,9 @@ import os
 EMBEDDER_MODEL = "nomic-embed-text"
 SUMMARY_MODEL = "qwen2.5:0.5b"
 DB_PATH = "./local_rag_db"
+DB_NAME = "chunk_summaries.json"
 CACHE_PATH = "./doc_cache"
+CACHE_NAME = "catalog.json"
 
 
 MAIN_MODEL = "gpt-oss:20b"
