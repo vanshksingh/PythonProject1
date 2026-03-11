@@ -1,0 +1,29 @@
+[
+  {
+    "question": "What is Retrieval-Augmented Generation (RAG)?",
+    "ground_truth": "Retrieval-Augmented Generation is a technique that improves language model responses by retrieving relevant documents from an external knowledge base and using them as context for generation.",
+    "answer": "Retrieval-Augmented Generation is a method where a language model retrieves relevant documents from a knowledge base and uses them to generate more accurate responses.",
+    "contexts": [
+      "Retrieval-Augmented Generation combines document retrieval with language model generation.",
+      "In RAG systems, relevant documents are retrieved and injected into the model context before response generation."
+    ]
+  },
+  {
+    "question": "What similarity metric is commonly used in vector databases?",
+    "ground_truth": "Cosine similarity is commonly used to measure similarity between embedding vectors in vector databases.",
+    "answer": "Vector databases often use cosine similarity to determine how similar two embeddings are.",
+    "contexts": [
+      "Cosine similarity measures the cosine of the angle between two vectors.",
+      "Many vector search systems such as FAISS or Chroma support cosine similarity for retrieval."
+    ]
+  },
+  {
+    "question": "What problem does chunking solve in RAG systems?",
+    "ground_truth": "Chunking splits long documents into smaller segments so they can be embedded and retrieved efficiently within model context limits.",
+    "answer": "Chunking divides long documents into smaller pieces so they can be embedded and retrieved within token limits.",
+    "contexts": [
+      "Chunking is used to break large documents into manageable segments.",
+      "These chunks can then be embedded and retrieved individually."
+    ]
+  }
+]
