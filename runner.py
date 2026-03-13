@@ -63,13 +63,13 @@ def start_chat():
         }
     }
 
-    print("--- 🌦️ Weather Pun-dit 3000 Online ---")
+    print("--- 🌦️ Thread-RAG Online ---")
     print("(Type 'exit' to quit)\n")
 
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["exit", "quit", "q"]:
-            print("Pun-dit: See ya on the 'sunny side'!")
+            print("Assistant: Thank you for using this tool. Goodbye!")
             break
 
         # Invoke the agent
@@ -81,7 +81,7 @@ def start_chat():
 
         # The last message in the list is the AI's final response
         final_response = result["messages"][-1].content
-        print(f"\nPun-dit: {final_response}\n")
+        print(f"\nAssistant: {final_response}\n")
 
 if __name__ == "__main__":
     start_chat()
