@@ -167,7 +167,7 @@ def fetch_chunks_by_id(chunk_ids: List[str]):
 
 
 # --- PRE-HEAT ---
-
+@tool
 def pre_heat_summaries(serial_id: Optional[str] = None):
     """Generates all missing summaries for a doc (or all docs) and caches them."""
     print(f"🔥 Pre-heating {serial_id if serial_id else 'All'}...")

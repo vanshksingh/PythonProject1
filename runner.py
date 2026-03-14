@@ -5,7 +5,7 @@ from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.agents import create_agent
 # External
-from rag_ret import list_available_documents, rag_search, fetch_chunks_by_id, index_new_document
+from rag_ret import list_available_documents, rag_search, fetch_chunks_by_id, index_new_document, pre_heat_summaries
 from config  import MAIN_MODEL, TEMPERATURE
 
 
@@ -42,7 +42,7 @@ SYSTEM_PROMPT = (
 
 # 5. Set up Memory and Agent
 memory = InMemorySaver()
-tools = [ list_available_documents, rag_search, fetch_chunks_by_id, index_new_document ]
+tools = [ list_available_documents, rag_search, fetch_chunks_by_id, index_new_document, pre_heat_summaries ]
 
 
 
